@@ -1843,6 +1843,9 @@ public class TexturePackLoader {
 
     allTextures.put("banner_base",
         new SimpleTexture("assets/minecraft/textures/entity/banner_base", Texture.bannerBase));
+
+    allTextures.put("armor_stand",
+        new SimpleTexture("assets/minecraft/textures/entity/armorstand/wood", Texture.armorStand));
   }
 
   private static String texturePackName(File tpFile) {
