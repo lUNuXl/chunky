@@ -21,6 +21,10 @@ package se.llbit.chunky.renderer.projection;
  */
 public enum ProjectionMode {
   PINHOLE("Standard"),
+  OCTA_ANAMORPHIC("Standard with octagonal anamorphic aperture"),
+  HEXA("Standard with hexagonal aperture"),
+  PENTA("Standard with pentagonal aperture"),
+  DIAMOND("Standard with diamond aperture"),
   PARALLEL("Parallel"),
   FISHEYE("Fisheye"),
   STEREOGRAPHIC("Stereographic"),
