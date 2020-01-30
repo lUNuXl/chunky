@@ -22,6 +22,7 @@ import se.llbit.chunky.renderer.Refreshable;
 import se.llbit.chunky.renderer.projection.ApertureProjector;
 import se.llbit.chunky.renderer.projection.FisheyeProjector;
 import se.llbit.chunky.renderer.projection.ForwardDisplacementProjector;
+import se.llbit.chunky.renderer.projection.MultiBladeApertureProjector;
 import se.llbit.chunky.renderer.projection.OmniDirectionalStereoProjector;
 import se.llbit.chunky.renderer.projection.OmniDirectionalStereoProjector.Eye;
 import se.llbit.chunky.renderer.projection.PanoramicProjector;
@@ -33,7 +34,6 @@ import se.llbit.chunky.renderer.projection.Projector;
 import se.llbit.chunky.renderer.projection.SphericalApertureProjector;
 import se.llbit.chunky.renderer.projection.StereographicProjector;
 import se.llbit.chunky.world.Chunk;
-import se.llbit.chunky.entity.PlayerEntity;
 import se.llbit.json.JsonObject;
 import se.llbit.log.Log;
 import se.llbit.math.Matrix3;
@@ -180,6 +180,12 @@ public class Camera implements JsonSerializable {
         p :
         new SphericalApertureProjector(p, subjectDistance / dof, subjectDistance);
   }
+  
+  private Projector applyMultiBladeDoF(Projector p, int bladeAmount, double bladeRotation, double lensRatio) {
+	    return infiniteDoF() ?
+	        p :
+	        new MultiBladeApertureProjector(p, subjectDistance / dof, subjectDistance, bladeAmount, bladeRotation, lensRatio);
+	  }
 
   /**
    * Creates projector based on the current camera settings.
@@ -190,6 +196,14 @@ public class Camera implements JsonSerializable {
         Log.errorf("Unknown projection mode: %s, using standard mode", projectionMode);
       case PINHOLE:
         return applyDoF(new PinholeProjector(fov), subjectDistance);
+      case OCTA_ANAMORPHIC:
+          return applyMultiBladeDoF(new PinholeProjector(fov), 6, 0.0, 1.5);
+      case HEXA:
+          return applyMultiBladeDoF(new PinholeProjector(fov), 6, 0.0, 1.);
+      case PENTA:
+          return applyMultiBladeDoF(new PinholeProjector(fov), 5, 0.0, 1.);
+      case DIAMOND:
+          return applyMultiBladeDoF(new PinholeProjector(fov), 4, Math.PI/4.0, 1.);
       case PARALLEL:
         return applyDoF(
             new ForwardDisplacementProjector(new ParallelProjector(worldWidth, fov), -worldWidth),

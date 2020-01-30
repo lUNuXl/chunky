@@ -48,7 +48,7 @@ public enum Postprocess {
     }
   };
 
-  public static final Postprocess DEFAULT = GAMMA;
+  public static final Postprocess DEFAULT = TONEMAP2;
 
   public static Postprocess get(String name) {
     try {
